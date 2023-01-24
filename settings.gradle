@@ -1,0 +1,35 @@
+pluginManagement {
+    repositories {
+
+        maven { url 'https://jitpack.io' }
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        google()
+
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+
+        maven { url 'https://jitpack.io' }
+        mavenCentral()
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+
+
+        google()
+
+    }
+}
+rootProject.name = "BILIBILIAS"
+include ':app'
+include ':tool_livestream'
+include ':common'
+include ':model_ffmpeg'
+include ':tool_roam'
