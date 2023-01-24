@@ -69,7 +69,7 @@ public class PlayLocalVideoActivity extends AbsActivity implements View.OnClickL
         videoView.setUrl(videoPath);
         //初始化视频控制器
         videoController = new DKVideoController(this);
-
+        videoController.loadDanmaku("");
         //设置控制器
         videoView.setVideoController(videoController);
         //开始播放
