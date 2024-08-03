@@ -1,20 +1,20 @@
-@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
-    alias(libs.plugins.bilibiliAs.android.library)
+﻿plugins {
+    alias(libs.plugins.bilibilias.android.library)
     id("com.squareup.wire")
 }
 
 android {
-    namespace = "com.bilias.datastore.proto"
+    namespace = "com.imcys.bilibilias.core.datastore.proto"
 }
+
 wire {
     kotlin {
         sourcePath {
-            srcDirs("src/main/proto")
+            srcDir(files("src/main/proto"))
         }
     }
 }
+
 dependencies {
-    implementation(libs.wireRuntime)
-    implementation(libs.wireGrpcClient)
+    implementation(libs.wire.runtime)
 }

@@ -3,12 +3,8 @@
 
     <data>
 
-        <variable
-            name="EpisodesBean"
-            type="com.imcys.model.PgcViewSeason" />
     </data>
-    <!--android:background="@{EpisodesBean.checkState == 1 ? @drawable/subsection_bg : @drawable/subsection_false_bg}"-->
-    <!--android:text="@{EpisodesBean.badge+EpisodesBean.long_title}"-->
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/item_subsection_ly"
         android:layout_width="150dp"

@@ -1,11 +1,8 @@
 dependencyResolutionManagement {
     repositories {
-        maven("https://mirrors.tencent.com/nexus/repository/maven-public/")
-        mavenCentral()
         google()
-        gradlePluginPortal()
+        mavenCentral()
     }
-
     versionCatalogs {
         create("libs") {
             from(files("../gradle/libs.versions.toml"))
@@ -14,5 +11,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "build-logic"
-
 include(":convention")

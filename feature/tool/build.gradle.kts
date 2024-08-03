@@ -1,29 +1,21 @@
-@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
-    alias(libs.plugins.bilibiliAs.android.feature)
-    alias(libs.plugins.bilibiliAs.android.library.compose)
+﻿plugins {
+    alias(libs.plugins.bilibilias.android.feature)
+    alias(libs.plugins.bilibilias.android.compose)
+    alias(libs.plugins.bilibilias.android.jacoco)
+    alias(libs.plugins.bilibilias.decompose)
 }
 
 android {
-    namespace = "com.imcys.biliAs.feature.tool"
-    packaging {
-        resources {
-            excludes += "META-INF/*"
-        }
-    }
+    namespace = "com.imcys.bilibilias.feature.tool"
 }
 
 dependencies {
-    implementation(projects.core.network)
-    implementation(projects.core.model)
-    implementation(projects.core.common)
-    /**
-     * jxl库
-     * 直接生成excel文件时采用
-     */
-    implementation(libs.jxl)
+    implementation(projects.feature.common)
 
-    implementation(libs.androidFilePicker)
+    implementation(projects.core.domain)
+    implementation(projects.core.download)
+
     testImplementation(projects.core.testing)
+    androidTestImplementation(libs.bundles.androidx.compose.ui.test)
     androidTestImplementation(projects.core.testing)
 }

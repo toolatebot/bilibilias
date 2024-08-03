@@ -1,27 +1,40 @@
-@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
-    alias(libs.plugins.bilibiliAs.android.library)
-    alias(libs.plugins.bilibiliAs.android.library.compose)
+﻿plugins {
+    alias(libs.plugins.bilibilias.android.library)
+    alias(libs.plugins.bilibilias.android.compose)
+    alias(libs.plugins.bilibilias.android.jacoco)
+    alias(libs.plugins.bilibilias.android.testoptions)
+    alias(libs.plugins.roborazzi)
 }
 
 android {
-    namespace = "com.imcys.designsystem"
+    namespace = "com.imcys.bilibilias.core.designsystem"
+    defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 }
 
 dependencies {
-    implementation(libs.androidx.activity.compose)
+    lintPublish(projects.lint)
+
     api(libs.androidx.compose.foundation)
     api(libs.androidx.compose.foundation.layout)
     api(libs.androidx.compose.material.iconsExtended)
     api(libs.androidx.compose.material3)
+    api(libs.androidx.compose.material3.adaptive)
+    api(libs.androidx.compose.material3.navigationSuite)
     api(libs.androidx.compose.runtime)
-    api(libs.androidx.compose.ui.tooling.preview)
     api(libs.androidx.compose.ui.util)
 
-    debugApi(libs.androidx.compose.ui.tooling)
+    api(libs.coil.compose)
 
-    implementation(libs.androidx.core.ktx)
-    api(libs.coil.kt.compose)
+    api(libs.dokar.sheets)
 
-    implementation(libs.material.dialogs.core)
+    testImplementation(libs.androidx.compose.ui.test)
+    testImplementation(libs.androidx.compose.ui.testManifest)
+
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(libs.robolectric)
+    testImplementation(projects.core.screenshotTesting)
+
+    androidTestImplementation(libs.bundles.androidx.compose.ui.test)
 }

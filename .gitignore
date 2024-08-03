@@ -3,8 +3,8 @@
 
 # Java class files
 *.class
-doc/.vitepress/cache/#
-doc/.vitepress/dist/#
+doc/.vitepress/cache
+doc/.vitepress/dist
 doc/node_modules
 
 # Gradle files
@@ -27,6 +27,7 @@ captures/
 *.log
 
 # Android Studio generated files and folders
+captures/
 .externalNativeBuild/
 .cxx/
 *.apk
@@ -35,7 +36,7 @@ output-metadata.json
 
 # IntelliJ
 *.iml
-.idea/*
+.idea/
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
@@ -50,26 +51,6 @@ google-services.json
 # Android Profiling
 *.hprof
 
-gen-external-apklibs
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
-
-# End of https://www.toptal.com/developers/gitignore/api/android,kotlin
-
+# Kotlin
+.kotlin
+kotlinBuildReport

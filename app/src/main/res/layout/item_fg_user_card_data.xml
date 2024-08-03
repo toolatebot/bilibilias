@@ -3,13 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="UpStatBeam"
-            type="com.imcys.model.UpStatBean" />
-
-        <variable
-            name="UserCardBean"
-            type="com.imcys.model.UserCardBean" />
 
     </data>
 

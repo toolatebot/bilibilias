@@ -4,10 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="UserBaseBean"
-            type="com.imcys.model.UserSpaceInformation" />
+            type="com.imcys.bilibilias.home.ui.model.UserBaseBean" />
 
     </data>
 
@@ -24,6 +23,7 @@
             <androidx.constraintlayout.utils.widget.ImageFilterView
                 android:layout_width="90dp"
                 android:layout_height="90dp"
+                tools:src="@drawable/ic_as_video_download"
                 app:round="45dp" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -45,9 +45,10 @@
                         android:ellipsize="end"
                         android:letterSpacing="0.05"
                         android:maxLines="1"
-                        android:text="@{UserBaseBean.name}"
+                        android:text="@{UserBaseBean.data.name}"
                         android:textSize="22sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="name" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -63,10 +64,11 @@
                         android:ellipsize="end"
                         android:letterSpacing="0.05"
                         android:maxLines="2"
-                        android:text="@{UserBaseBean.sign}"
+                        android:text="@{UserBaseBean.data.sign}"
                         android:textColor="@color/black"
                         android:textSize="13sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:text="sign" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 

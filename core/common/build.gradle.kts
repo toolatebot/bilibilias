@@ -1,34 +1,23 @@
-@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-    alias(libs.plugins.bilibiliAs.android.library)
-    alias(libs.plugins.bilibiliAs.android.hilt)
+    alias(libs.plugins.bilibilias.android.library)
+    alias(libs.plugins.bilibilias.android.jacoco)
+    alias(libs.plugins.bilibilias.hilt)
 }
 
 android {
-    namespace = "com.imcys.common"
+    namespace = "com.imcys.bilibilias.core.common"
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(projects.core.crash)
-
-    api(libs.kotlinx.serialization.json)
-    api(libs.kotlinx.serialization.cbor)
-    api(libs.kotlinx.serialization.protobuf)
-    api(libs.kotlinx.datetime)
-
-    api(libs.timber)
+    api(libs.kotlinx.collections.immutable)
+    api(libs.okio)
     api(libs.napier)
-
+    api(libs.devappx)
+    api(libs.toaster)
     implementation(libs.kotlin.reflect)
 
-    api(libs.toaster)
-    implementation(libs.androidx.startup.runtime)
-
-    api(libs.kotlinx.collections.immutable)
-    api(libs.devAppX)
-
-    api(libs.androidx.media3.common)
-    testImplementation(projects.core.testing)
+    testImplementation(kotlin("test"))
+    implementation(libs.kotlinx.coroutines.core)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
 }

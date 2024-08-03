@@ -3,11 +3,8 @@
 
     <data>
 
-        <variable
-            name="DataBean"
-            type="com.imcys.model.VideoPageListData" />
     </data>
-    <!--android:background="@{DataBean.checkState == 1 ? @drawable/subsection_bg : @drawable/subsection_false_bg}"-->
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/item_subsection_ly"
         android:layout_width="150dp"

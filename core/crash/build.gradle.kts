@@ -1,23 +1,15 @@
-﻿@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
-    alias(libs.plugins.bilibiliAs.android.library)
+﻿plugins {
+    alias(libs.plugins.bilibilias.android.library)
 }
 
 android {
-    namespace = "com.bilias.crash"
+    namespace = "com.imcys.bilibilias.core.crash"
     buildFeatures {
         buildConfig = true
     }
 }
 
 dependencies {
-    implementation(libs.androidx.annotation)
-    implementation(libs.acra.http)
-    implementation(libs.acra.mail)
-    implementation(libs.acra.core)
-    implementation(libs.acra.dialog)
-    implementation(libs.acra.notification)
-    implementation(libs.acra.toast)
-    implementation(libs.acra.limiter)
-//    implementation(libs.acra.scheduler)
+    implementation("ch.acra:acra-core:5.11.3")
+    implementation("ch.acra:acra-dialog:5.11.3")
 }

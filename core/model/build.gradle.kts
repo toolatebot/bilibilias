@@ -1,13 +1,8 @@
-@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
-    alias(libs.plugins.bilibiliAs.android.library)
+﻿plugins {
+    alias(libs.plugins.bilibilias.jvm.library)
     alias(libs.plugins.kotlin.serialization)
+    `java-test-fixtures`
 }
-
-android {
-    namespace = "com.imcys.model"
-}
-
 
 dependencies {
     implementation(libs.kotlinx.serialization.json)

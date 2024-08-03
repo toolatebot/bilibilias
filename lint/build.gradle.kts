@@ -1,23 +1,15 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     `java-library`
     kotlin("jvm")
-    alias(libs.plugins.bilibiliAs.android.lint)
+    alias(libs.plugins.bilibilias.android.lint)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
+    compileOnly(libs.kotlin.stdlib)
     compileOnly(libs.lint.api)
     testImplementation(libs.lint.checks)
     testImplementation(libs.lint.tests)

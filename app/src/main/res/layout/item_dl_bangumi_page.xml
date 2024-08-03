@@ -5,12 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
-
-        <variable
-            name="EpisodesBean"
-            type="com.imcys.model.PgcViewSeason" />
-
     </data>
 
     <androidx.cardview.widget.CardView
@@ -22,14 +16,13 @@
         app:cardCornerRadius="15dp"
         app:cardElevation="0dp"
         tools:ignore="MissingConstraints">
-        <!--android:background="@{EpisodesBean.selected == 0 ? `#ffd2e0`  : `#fb7299`}"-->
-        <!--android:text="@{EpisodesBean.badge + EpisodesBean.long_title}"-->
-        <!--android:textColor="@{EpisodesBean.selected == 0 ? @color/black  : @color/white}"-->
+
         <Button
             android:id="@+id/item_collection_button"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:foreground="?android:attr/selectableItemBackgroundBorderless"
+
             android:textSize="15sp"
             android:textStyle="bold" />
     </androidx.cardview.widget.CardView>

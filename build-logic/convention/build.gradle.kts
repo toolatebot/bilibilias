@@ -1,65 +1,106 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    `kotlin-dsl`
+    alias(libs.plugins.kotlin.dsl)
 }
 
-// Configure the build-logic plugins to target JDK 17
-// This matches the JDK used to build the project, and is not related to what is running on device.
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-tasks.withType<KotlinCompile>().configureEach {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
+group = "com.imcys.bilibilias.buildlogic"
+
+kotlin {
+    jvmToolchain(17)
 }
 
 dependencies {
-    compileOnly(libs.room.gradlePlugin)
     compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.android.tools.common)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
+    compileOnly(libs.room.gradlePlugin)
+    compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.detekt.gradlePlugin)
+    compileOnly(libs.kotlin.power.assert.gradlePlugin)
+    compileOnly(libs.compose.compiler.report.gradlePlugin) {
+        repositories {
+            mavenCentral()
+            gradlePluginPortal()
+        }
+    }
+}
+
+tasks {
+    validatePlugins {
+        enableStricterValidation = true
+        failOnWarning = true
+    }
 }
 
 gradlePlugin {
     plugins {
-        register("androidApplicationCompose") {
-            id = "bilibiliAs.android.application.compose"
-            implementationClass = "plugin.AndroidApplicationComposeConventionPlugin"
+        register("androidCompose") {
+            id = "bilibilias.android.compose"
+            implementationClass = "AndroidComposeConventionPlugin"
         }
         register("androidApplication") {
-            id = "bilibiliAs.android.application"
-            implementationClass = "plugin.AndroidApplicationConventionPlugin"
+            id = "bilibilias.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
         }
-        register("androidLibraryCompose") {
-            id = "bilibiliAs.android.library.compose"
-            implementationClass = "plugin.AndroidLibraryComposeConventionPlugin"
+        register("androidJacoco") {
+            id = "bilibilias.android.jacoco"
+            implementationClass = "AndroidJacocoConventionPlugin"
         }
         register("androidLibrary") {
-            id = "bilibiliAs.android.library"
-            implementationClass = "plugin.AndroidLibraryConventionPlugin"
+            id = "bilibilias.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
         }
         register("androidFeature") {
-            id = "bilibiliAs.android.feature"
-            implementationClass = "plugin.AndroidFeatureConventionPlugin"
+            id = "bilibilias.android.feature"
+            implementationClass = "AndroidFeatureConventionPlugin"
         }
-        register("androidHilt") {
-            id = "bilibiliAs.android.hilt"
-            implementationClass = "plugin.AndroidHiltConventionPlugin"
+        register("androidTest") {
+            id = "bilibilias.android.test"
+            implementationClass = "AndroidTestConventionPlugin"
         }
         register("androidRoom") {
-            id = "bilibiliAs.android.room"
-            implementationClass = "plugin.AndroidRoomConventionPlugin"
+            id = "bilibilias.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
         }
         register("androidLint") {
-            id = "bilibiliAs.android.lint"
-            implementationClass = "plugin.AndroidLintConventionPlugin"
+            id = "bilibilias.android.lint"
+            implementationClass = "AndroidLintConventionPlugin"
         }
         register("jvmLibrary") {
-            id = "bilibiliAs.jvm.library"
-            implementationClass = "plugin.JvmLibraryConventionPlugin"
+            id = "bilibilias.jvm.library"
+            implementationClass = "JvmLibraryConventionPlugin"
+        }
+        register("androidFlavors") {
+            id = "bilibilias.android.application.flavors"
+            implementationClass = "AndroidApplicationFlavorsConventionPlugin"
+        }
+        register("androidBugly") {
+            id = "bilibilias.android.application.bugly"
+            implementationClass = "AndroidApplicationBuglyConventionPlugin"
+        }
+        register("androidApplicationTestOptionsUnitTests") {
+            id = "bilibilias.android.testoptions"
+            implementationClass = "AndroidTestOptionsUnitTestsConventionPlugin"
+        }
+        register("hilt") {
+            id = "bilibilias.hilt"
+            implementationClass = "HiltConventionPlugin"
+        }
+        register("decompose") {
+            id = "bilibilias.decompose"
+            implementationClass = "DecomposeConventionPlugin"
+        }
+        register("detekt") {
+            id = libs.plugins.bilibilias.detekt.get().pluginId
+            implementationClass = "DetektConventionPlugin"
+        }
+        register("sqlLin") {
+            id = "bilibilias.sqlLin"
+            implementationClass = "SqlLinConventionPlugin"
+        }
+        register("composeCompilerReport") {
+            id = "bilibilias.compose.compiler.report"
+            implementationClass = "ComposeCompilerReportPlugin"
         }
     }
 }

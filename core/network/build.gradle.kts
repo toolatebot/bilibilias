@@ -1,56 +1,45 @@
-@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
-    alias(libs.plugins.bilibiliAs.android.library)
-    alias(libs.plugins.bilibiliAs.android.hilt)
+﻿plugins {
+    alias(libs.plugins.bilibilias.android.library)
+    alias(libs.plugins.bilibilias.android.jacoco)
+    alias(libs.plugins.bilibilias.hilt)
 }
 
 android {
-    namespace = "com.imcys.network"
+    namespace = "com.imcys.bilibilias.core.network"
     buildFeatures {
         buildConfig = true
     }
 }
 
 dependencies {
-    implementation(projects.core.model)
-    implementation(projects.core.common)
+    api(projects.core.common)
+    api(projects.core.model)
     implementation(projects.core.datastore)
-    implementation(projects.core.datastoreProto)
-    implementation(projects.core.okdownloader)
-    implementation(projects.common)
+
+    implementation(libs.coil.kt)
+    implementation(libs.coil.gif)
+    implementation(libs.coil.svg)
+    implementation(libs.coil.video)
+
+    implementation(libs.kotlinx.atomicfu)
+    implementation(libs.kotlinx.serialization.json)
+//    testImplementation(libs.kotlinx.coroutines.test)
+
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 
     debugImplementation(libs.monitor)
     releaseImplementation(libs.monitor.no.op)
 
-    implementation(libs.ktor.client.android)
-    implementation(libs.ktor.client.okhttp)
-    implementation(libs.ktor.client.logging)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.client.encoding)
-    implementation(libs.ktor.serialization.kotlinx.json)
-    implementation(libs.ktor.serialization.kotlinx.protobuf)
-
-    implementation(libs.androidx.paging.runtime)
-
-    implementation(libs.wireGrpcClient)
-
     implementation(libs.okhttp.brotli)
 
-    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.androidx.paging.compose)
+    testImplementation(libs.androidx.paging.common)
 
-    implementation(libs.coil.kt)
-    implementation(libs.coil.kt.svg)
-    implementation(libs.coil.kt.gif)
-
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.ktor.client.mock)
-
-    testImplementation("com.google.dagger:hilt-android-testing:2.51.1")
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
-
-    kspTest("com.google.dagger:hilt-android-compiler:2.51.1")
-    kspAndroidTest("com.google.dagger:hilt-android-compiler:2.51.1")
-
-    implementation(libs.androidx.work.runtime)
-    implementation(libs.androidx.hilt.work)
+    implementation("commons-codec:commons-codec:1.17.1")
+    implementation("com.goncalossilva:murmurhash:0.4.0")
 }

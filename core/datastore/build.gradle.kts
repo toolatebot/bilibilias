@@ -1,31 +1,28 @@
-@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
-    alias(libs.plugins.bilibiliAs.android.library)
-    alias(libs.plugins.bilibiliAs.android.hilt)
+﻿plugins {
+    alias(libs.plugins.bilibilias.android.library)
+    alias(libs.plugins.bilibilias.android.jacoco)
+    alias(libs.plugins.bilibilias.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "com.bilias.core.datastore"
-    packaging {
-        resources {
-            excludes += "META-INF/*"
-        }
-    }
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
+    namespace = "com.imcys.bilibilias.core.datastore"
+    testFixtures.enable = true
 }
 
 dependencies {
+    api(libs.androidx.dataStore)
     api(projects.core.datastoreProto)
+    api(projects.core.model)
+
     implementation(projects.core.common)
-    implementation(projects.core.model)
 
-    implementation(libs.mmkv)
-    implementation(libs.fastkv)
-    implementation(libs.androidx.datastore)
+    implementation(libs.kotlinx.serialization.protobuf)
 
-    androidTestImplementation(projects.core.testing)
-    testImplementation(projects.core.testing)
-    implementation(libs.hilt.android.testing)
+    kspTestFixtures(libs.hilt.compiler)
+    testFixturesImplementation(libs.hilt.android.testing)
+    testFixturesImplementation(projects.core.common)
+    testFixturesImplementation(projects.core.datastore)
+
+    testImplementation(libs.kotlinx.coroutines.test)
 }

@@ -7,10 +7,6 @@
     <data>
 
 
-        <variable
-            name="DataBean"
-            type="com.imcys.model.VideoPageListData" />
-
     </data>
 
     <androidx.cardview.widget.CardView
@@ -22,15 +18,14 @@
         app:cardCornerRadius="15dp"
         app:cardElevation="0dp"
         tools:ignore="MissingConstraints">
-        <!--android:background="@{DataBean.selected == 0 ? `#ffd2e0`  : `#fb7299`}"-->
-        <!--android:textColor="@{DataBean.selected == 0 ? @color/black  : @color/white}"-->
+
         <Button
             android:id="@+id/item_collection_button"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            android:text="@{DataBean.part}"
             android:textSize="15sp"
+
             android:textStyle="bold"
             tools:ignore="SpeakableTextPresentCheck" />
     </androidx.cardview.widget.CardView>

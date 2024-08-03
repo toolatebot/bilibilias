@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+    </data>
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -12,9 +16,7 @@
         app:cardCornerRadius="15dp"
         app:cardElevation="0dp"
         tools:ignore="MissingConstraints">
-        <!--android:background="@{ListBean.selected == 0 ? `#ffd2e0`  : `#fb7299`}"-->
-        <!--android:textColor="@{ListBean.selected == 0 ? @color/black  : @color/white}"-->
-        <!--android:text="@{ListBean.title}"-->
+
         <Button
             android:id="@+id/item_collection_button"
             android:layout_width="match_parent"

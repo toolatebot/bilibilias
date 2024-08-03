@@ -1,50 +1,63 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
-        includeBuild("build-logic")
-        gradlePluginPortal()
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.0")
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
-        maven("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/")
         mavenCentral()
-        google()
         maven("https://jitpack.io")
-        maven("https://androidx.dev/storage/compose-compiler/repository/")
+        google()
     }
 }
-rootProject.name = "BILIBILIAS"
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-include(":app")
-include(":common")
+rootProject.name = "bilibilias"
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
+include(":app")
+
+include(":benchmarks")
+include(":core:analytics")
 include(":core:common")
-include(":core:ui")
-include(":core:designsystem")
-include(":core:network")
-include(":core:model")
+include(":core:crash")
+include(":core:data")
 include(":core:database")
 include(":core:datastore")
-include(":core:crash")
-include(":core:okdownloader")
 include(":core:datastore-proto")
+include(":core:designsystem")
 include(":core:domain")
+include(":core:download")
+include(":core:ffmpeg")
+include(":core:model")
+include(":core:network")
+include(":core:screenshot-testing")
+include(":core:testing")
+include(":core:ui")
 
-include(":feature:authentication")
+include(":feature:authorspace")
+include(":feature:common")
+include(":feature:download")
 include(":feature:home")
+include(":feature:login")
+include(":feature:player")
+include(":feature:settings")
+include(":feature:splash")
 include(":feature:tool")
 include(":feature:user")
-include(":feature:setting")
-include(":feature:player")
-include(":feature:userspace")
-include(":feature:merge")
-include(":feature:download")
+include(":feature:ffmpeg-action")
 
 include(":lint")
 
-include(":XXPermissions:library")
-include(":core:testing")
+include(":okdownload:okdownload")
+
+include(":ui-test-hilt-manifest")
+include(":sync:work")

@@ -3,6 +3,11 @@
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -58,10 +63,11 @@
                         android:orientation="vertical">
 
                         <TextView
+
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:ellipsize="end"
-                            android:maxLines="1"
+                            android:ellipsize="middle"
+                            android:singleLine="true"
                             android:textSize="18sp" />
 
                     </LinearLayout>
@@ -107,12 +113,12 @@
                             app:tint="?attr/colorPrimary" />
 
                         <CheckBox
-                            android:theme="@style/CheckBoxTheme"
                             android:id="@+id/item_dl_finish_task_edit_checkBox"
                             android:layout_width="wrap_content"
                             android:layout_height="22dp"
                             android:layout_alignParentEnd="true"
-                            android:layout_alignParentBottom="true" />
+                            android:layout_alignParentBottom="true"
+                            android:theme="@style/CheckBoxTheme" />
 
                     </RelativeLayout>
 

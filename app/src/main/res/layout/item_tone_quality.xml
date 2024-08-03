@@ -5,11 +5,6 @@
 
     <data>
 
-
-        <variable
-            name="AudioBean"
-            type="com.imcys.model.NetworkPlayerPlayUrl" />
-
     </data>
 
     <androidx.cardview.widget.CardView
@@ -21,8 +16,7 @@
         app:cardCornerRadius="15dp"
         app:cardElevation="0dp"
         tools:ignore="MissingConstraints">
-        <!--android:background="@{AudioBean.selected == 0 ? `#ffd2e0`  : `#fb7299`}"-->
-        <!--android:textColor="@{AudioBean.selected == 0 ? @color/black  : @color/white}"-->
+
         <Button
             android:id="@+id/item_tone_quality_button"
             android:layout_width="match_parent"

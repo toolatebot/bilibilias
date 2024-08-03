@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="VideoBaseBean"
-            type="com.imcys.model.ViewDetail" />
 
     </data>
 
@@ -39,6 +36,7 @@
                     android:layout_height="100dp"
                     android:layout_weight="6"
                     android:transitionName="videoPic"
+                    android:scaleType="fitXY"
                     app:round="10dp" />
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -60,10 +58,8 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:text="@{VideoBaseBean.title}"
-                            android:textSize="16dp"
-                            android:textStyle="bold"
-                            android:transitionName="videoTitle" />
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -71,7 +67,6 @@
                             android:layout_marginTop="5dp"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:text="@{VideoBaseBean.desc}"
                             android:textColor="@color/color_text_hint"
                             android:textSize="12sp" />
 
