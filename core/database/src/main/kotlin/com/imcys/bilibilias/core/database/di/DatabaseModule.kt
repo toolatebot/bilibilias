@@ -6,8 +6,6 @@ import com.ctrip.sqllin.driver.DatabaseConfiguration
 import com.ctrip.sqllin.driver.toDatabasePath
 import com.ctrip.sqllin.dsl.Database
 import com.imcys.bilibilias.core.database.AsDatabase
-import com.imcys.bilibilias.core.database.AsDatabase_Impl
-import com.imcys.bilibilias.core.database.instantiateImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,10 +22,9 @@ internal class DatabaseModule {
         @ApplicationContext context: Context,
     ): AsDatabase = Room.databaseBuilder<AsDatabase>(
         context,
+        AsDatabase::class.java,
         "as-database",
-        { AsDatabase::class.instantiateImpl() }
     )
-        .fallbackToDestructiveMigration(true)
         .build()
 
     @Provides
@@ -42,22 +39,22 @@ internal class DatabaseModule {
             create = {
                 it.execSQL(
                     "create table `TaskEntity` (\n" +
-                            "  `id` integer not null primary key autoincrement,\n" +
-                            "  `uri` TEXT not null,\n" +
-                            "  `created` INTEGER not null,\n" +
-                            "  `aid` INTEGER not null,\n" +
-                            "  `bvid` TEXT not null,\n" +
-                            "  `cid` INTEGER not null,\n" +
-                            "  `fileType` TEXT not null,\n" +
-                            "  `subTitle` TEXT not null,\n" +
-                            "  `title` TEXT not null,\n" +
-                            "  `state` TEXT not null,\n" +
-                            "  `bytesSentTotal` INTEGER not null,\n" +
-                            "  `contentLength` INTEGER not null\n" +
-                            ")"
+                        "  `id` integer not null primary key autoincrement,\n" +
+                        "  `uri` TEXT not null,\n" +
+                        "  `created` INTEGER not null,\n" +
+                        "  `aid` INTEGER not null,\n" +
+                        "  `bvid` TEXT not null,\n" +
+                        "  `cid` INTEGER not null,\n" +
+                        "  `fileType` TEXT not null,\n" +
+                        "  `subTitle` TEXT not null,\n" +
+                        "  `title` TEXT not null,\n" +
+                        "  `state` TEXT not null,\n" +
+                        "  `bytesSentTotal` INTEGER not null,\n" +
+                        "  `contentLength` INTEGER not null\n" +
+                        ")",
                 )
-            }
+            },
         ),
-        enableSimpleSQLLog = true
+        enableSimpleSQLLog = true,
     )
 }

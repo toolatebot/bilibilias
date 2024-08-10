@@ -16,8 +16,8 @@ android {
     namespace = "com.imcys.bilibilias"
     defaultConfig {
         applicationId = "com.imcys.bilibilias"
-        versionCode = 17
-        versionName = "0.1.7"
+        versionCode = 18
+        versionName = "0.1.8"
         ndk {
             abiFilters += listOf("arm64-v8a")
         }
@@ -31,6 +31,8 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix = AsBuildType.DEBUG.applicationIdSuffix
+            resValue("string", "app_name", "BILIBILIAS_DEBUG")
+            resValue("string", "app_channel", "Official Channel Debug")
         }
         release {
             isMinifyEnabled = true
@@ -41,12 +43,16 @@ android {
             )
             applicationIdSuffix = AsBuildType.RELEASE.applicationIdSuffix
             baselineProfile.automaticGenerationDuringBuild = true
+            resValue("string", "app_name", "BILIBILIAS")
+            resValue("string", "app_channel", "Official Channel")
         }
     }
 
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
         }
     }
 }
@@ -83,7 +89,7 @@ dependencies {
     implementation(libs.androidx.compose.material3.windowSizeClass)
     implementation(libs.androidx.compose.runtime.tracing)
     implementation(libs.androidx.core.ktx)
-
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.tracing.ktx)
@@ -92,7 +98,7 @@ dependencies {
     implementation(libs.coil.kt)
     implementation(libs.coil.compose)
 
-    implementation(libs.androidx.work.ktx)
+    implementation(libs.androidx.work.runtime)
 
     implementation(libs.androidx.activity.ktx)
 

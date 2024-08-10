@@ -1,6 +1,5 @@
 package com.imcys.bilibilias.ui
 
-import androidx.compose.material3.adaptive.ExperimentalMaterial3AdaptiveApi
 import androidx.compose.material3.adaptive.Posture
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.runtime.CompositionLocalProvider
@@ -13,8 +12,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
-import com.arkivanov.decompose.DefaultComponentContext
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.github.takahirom.roborazzi.captureRoboImage
 import com.imcys.bilibilias.core.data.util.ErrorMonitor
 import com.imcys.bilibilias.core.designsystem.theme.AsTheme
@@ -72,14 +69,13 @@ class AsAppScreenSizesScreenshotTests {
     lateinit var errorMonitor: ErrorMonitor
 
     @Inject
-    lateinit var rootComponentFactory: RootComponent.Factory
+    lateinit var rootComponent: RootComponent
 
     @Before
     fun setup() {
         hiltRule.inject()
     }
 
-    @OptIn(ExperimentalMaterial3AdaptiveApi::class)
     private fun testAsAppScreenshotWithSize(width: Dp, height: Dp, screenshotName: String) {
         composeTestRule.setContent {
             CompositionLocalProvider(
@@ -89,12 +85,10 @@ class AsAppScreenSizesScreenshotTests {
                     override = DeviceConfigurationOverride.ForcedSize(DpSize(width, height)),
                 ) {
                     AsTheme {
-                        val fakeAppState = rememberAsAppState(
-                            errorMonitor = errorMonitor,
-                        )
+                        val fakeAppState = rememberAsAppState(errorMonitor = errorMonitor)
                         AsApp(
                             fakeAppState,
-                            rootComponentFactory(DefaultComponentContext(LifecycleRegistry())),
+                            rootComponent,
                             windowAdaptiveInfo = WindowAdaptiveInfo(
                                 windowSizeClass = WindowSizeClass.compute(
                                     width.value,

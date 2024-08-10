@@ -23,7 +23,7 @@ dependencies {
 
     implementation(libs.kotlinx.atomicfu)
     implementation(libs.kotlinx.serialization.json)
-//    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.kotlinx.coroutines.test)
 
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.okhttp)
@@ -33,8 +33,6 @@ dependencies {
 
     debugImplementation(libs.monitor)
     releaseImplementation(libs.monitor.no.op)
-
-    implementation(libs.okhttp.brotli)
 
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)

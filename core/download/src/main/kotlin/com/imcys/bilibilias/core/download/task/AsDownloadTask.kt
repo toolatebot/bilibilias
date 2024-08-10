@@ -1,51 +1,32 @@
 package com.imcys.bilibilias.core.download.task
 
 import android.net.Uri
-import com.imcys.bilibilias.core.common.utils.DataSize.Companion.mb
 import com.imcys.bilibilias.core.model.download.FileType
-import com.imcys.bilibilias.core.model.video.ViewInfo
+import com.imcys.bilibilias.core.model.video.ViewIds
+import com.imcys.bilibilias.core.network.api.BILIBILI_URL
+import com.imcys.bilibilias.core.network.api.BROWSER_USER_AGENT
 import com.liulishuo.okdownload.DownloadTask
-import java.io.File
 
-class AsDownloadTask {
-    internal val viewInfo: ViewInfo
-    internal val subTitle: String
-    internal val okTask: DownloadTask
-    internal val fileType: FileType
-
-    constructor(viewInfo: ViewInfo, subTitle: String, fileType: FileType, url: String, file: File) {
-        this.viewInfo = viewInfo
-        this.subTitle = subTitle
-        this.fileType = fileType
-        this.okTask = createTask(fileType, DownloadTask.Builder(url, file))
-    }
-
-    constructor(viewInfo: ViewInfo, subTitle: String, fileType: FileType, url: String, uri: Uri) {
-        this.viewInfo = viewInfo
-        this.subTitle = subTitle
-        this.fileType = fileType
-        this.okTask = createTask(fileType, DownloadTask.Builder(url, uri))
-    }
+class AsDownloadTask(
+    internal val ids: ViewIds,
+    internal val title: String,
+    internal val subTitle: String,
+    internal val fileType: FileType,
+    url: String,
+    uri: Uri,
+) {
+    internal val okTask: DownloadTask = createTask(fileType, DownloadTask.Builder(url, uri))
 
     private fun createTask(
         fileType: FileType,
-        builder: DownloadTask.Builder
-    ): DownloadTask {
-        return builder
-            .setPassIfAlreadyCompleted(false)
-            .setAutoCallbackToUIThread(true)
-            .setMinIntervalMillisCallbackProcess(50)
-            .addHeader(
-                "User-Agent",
-                "Mozilla/4.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/70.0.3538.77 Chrome/70.0.3538.77 Safari/537.36",
-            )
-            .addHeader("Referer", "https://www.bilibili.com/")
-            .setConnectionCount(1)
-            .setPriority(fileType.priority)
-            .build()
-    }
-
-    override fun toString(): String {
-        return "AsDownloadTask(subTitle='$subTitle', viewInfo=$viewInfo)"
-    }
+        builder: DownloadTask.Builder,
+    ): DownloadTask = builder
+        .setPassIfAlreadyCompleted(false)
+        .setAutoCallbackToUIThread(false)
+        .setMinIntervalMillisCallbackProcess(50)
+        .addHeader("User-Agent", BROWSER_USER_AGENT)
+        .addHeader("Referer", BILIBILI_URL)
+        .setConnectionCount(1)
+        .setPriority(fileType.priority)
+        .build()
 }

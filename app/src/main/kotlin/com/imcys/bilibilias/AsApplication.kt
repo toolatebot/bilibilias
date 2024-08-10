@@ -3,7 +3,6 @@ package com.imcys.bilibilias
 import android.app.Application
 import coil.ImageLoader
 import coil.ImageLoaderFactory
-import com.hjq.toast.Toaster
 import com.imcys.bilibilias.sync.initializers.Sync
 import com.imcys.bilibilias.util.Logging
 import dagger.hilt.android.HiltAndroidApp
@@ -15,6 +14,7 @@ import javax.inject.Inject
 class AsApplication :
     Application(),
     ImageLoaderFactory {
+
     @Inject
     lateinit var imageLoader: dagger.Lazy<ImageLoader>
 
@@ -23,7 +23,6 @@ class AsApplication :
 
     override fun onCreate() {
         super.onCreate()
-        Toaster.init(this)
         Napier.base(DebugAntilog())
         logging()
         Sync.initialize(context = this)

@@ -18,13 +18,7 @@ class UsersDataSource @Inject constructor(
 
     suspend fun setLoginState(state: Boolean) {
         dataStore.updateData {
-            it.copy(isLogined = state)
-        }
-    }
-
-    suspend fun setMixKey(key: String) {
-        dataStore.updateData {
-            it.copy(mixKey = key)
+            it.copy(isLogin = state)
         }
     }
 }

@@ -6,8 +6,6 @@ import io.github.aakira.napier.Napier
 import io.ktor.client.plugins.cookies.CookiesStorage
 import io.ktor.http.CookieEncoding
 import io.ktor.http.Url
-import io.ktor.http.parseServerSetCookieHeader
-import io.ktor.http.renderSetCookieHeader
 import io.ktor.util.date.GMTDate
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -24,14 +22,7 @@ class AsCookiesStorage @Inject constructor(
         if (cookie.name == "SESSDATA") usersDataSource.setLoginState(true)
     }
 
-    override suspend fun get(requestUrl: Url): List<KtorCookie> {
-        return asCookieStoreDataSource.cookies.first().values.map(AsCookie::mapToKtorCookie)
-    }
-
-    suspend fun getAllCookies(): String {
-        return asCookieStoreDataSource.cookies.first().values.map(AsCookie::mapToKtorCookie)
-            .toString()
-    }
+    override suspend fun get(requestUrl: Url): List<KtorCookie> = asCookieStoreDataSource.cookies.first().values.map(AsCookie::mapToKtorCookie)
 
     override fun close() = Unit
 }

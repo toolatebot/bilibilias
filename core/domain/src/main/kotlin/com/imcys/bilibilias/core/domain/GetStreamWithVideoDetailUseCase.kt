@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetStreamWithVideoDetailUseCase @Inject constructor(
-    private val videoRepository: VideoRepository
+    private val videoRepository: VideoRepository,
 ) {
     operator fun invoke(bvid: String): Flow<Pair<ViewDetail, List<CollectionDetailWithStream>>> {
         val detailFlow = flow { emit(videoRepository.获取视频详细信息(bvid)) }
         val collectionStreamUrl = detailFlow.map { detail ->
             detail.pages.map {
-                val streamUrl = videoRepository.videoStreamingURL(detail.aid, detail.bvid, it.cid)
+                val streamUrl = videoRepository.playerPlayUrl(detail.aid, detail.bvid, it.cid)
                 CollectionDetailWithStream(it.part, it.cid, streamUrl)
             }
         }
@@ -31,5 +31,5 @@ class GetStreamWithVideoDetailUseCase @Inject constructor(
 data class CollectionDetailWithStream(
     val title: String,
     val cid: Long,
-    val streamUrl: VideoStreamUrl
+    val streamUrl: VideoStreamUrl,
 )

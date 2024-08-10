@@ -1,17 +1,25 @@
 package com.imcys.bilibilias
 
-import android.graphics.Color
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.viewModels
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.metrics.performance.JankStats
 import com.arkivanov.decompose.defaultComponentContext
-import com.hjq.toast.Toaster
+import com.imcys.bilibilias.MainActivityUiState.Loading
+import com.imcys.bilibilias.MainActivityUiState.Success
 import com.imcys.bilibilias.core.analytics.AnalyticsHelper
 import com.imcys.bilibilias.core.analytics.LocalAnalyticsHelper
 import com.imcys.bilibilias.core.data.util.ErrorMonitor
@@ -20,15 +28,18 @@ import com.imcys.bilibilias.navigation.RootComponent
 import com.imcys.bilibilias.ui.AsApp
 import com.imcys.bilibilias.ui.rememberAsAppState
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     @Inject
     lateinit var lazyStats: dagger.Lazy<JankStats>
 
-    // @Inject
-    // lateinit var analyticsHelper: AnalyticsHelper
+    @Inject
+    lateinit var analyticsHelper: AnalyticsHelper
 
     @Inject
     lateinit var errorMonitor: ErrorMonitor
@@ -36,10 +47,34 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var rootComponentFactory: RootComponent.Factory
 
+    val viewModel: MainActivityViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        var uiState: MainActivityUiState by mutableStateOf(Loading)
+
+        // Update the uiState
+        lifecycleScope.launch {
+            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState
+                    .onEach { uiState = it }
+                    .collect()
+            }
+        }
+
+        // Keep the splash screen on-screen until the UI state is loaded. This condition is
+        // evaluated each time the app needs to be redrawn so it should be fast to avoid blocking
+        // the UI.
+        splashScreen.setKeepOnScreenCondition {
+            when (uiState) {
+                Loading -> true
+                is Success -> false
+            }
+        }
         enableEdgeToEdge()
-        backhandle()
+        backHandle()
         setContent {
             // Update the edge to edge configuration to match the theme
             // This is the same parameters as the default enableEdgeToEdge call, but we manually
@@ -48,8 +83,8 @@ class MainActivity : AppCompatActivity() {
             DisposableEffect(Unit) {
                 enableEdgeToEdge(
                     statusBarStyle = SystemBarStyle.auto(
-                        Color.TRANSPARENT,
-                        Color.TRANSPARENT,
+                        android.graphics.Color.TRANSPARENT,
+                        android.graphics.Color.TRANSPARENT,
                     ) { false },
                     navigationBarStyle = SystemBarStyle.auto(
                         lightScrim,
@@ -62,7 +97,7 @@ class MainActivity : AppCompatActivity() {
             val componentContext = defaultComponentContext()
             AsTheme {
                 CompositionLocalProvider(
-                    // LocalAnalyticsHelper provides analyticsHelper,
+                    LocalAnalyticsHelper provides analyticsHelper,
                 ) {
                     val appState = rememberAsAppState(errorMonitor = errorMonitor)
                     AsApp(appState, rootComponentFactory(componentContext))
@@ -82,12 +117,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var exitTime = 0L
-    private fun backhandle() {
+    private fun backHandle() {
         onBackPressedDispatcher.addCallback(
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     if (System.currentTimeMillis() - exitTime > 2000) {
-                        Toaster.show(R.string.app_HomeActivity_exit)
+//                        Toaster.show(R.string.app_HomeActivity_exit)
                         exitTime = System.currentTimeMillis()
                     } else {
                         finish()
@@ -109,50 +144,3 @@ private val lightScrim = android.graphics.Color.argb(0xe6, 0xFF, 0xFF, 0xFF)
  * https://cs.android.com/androidx/platform/frameworks/support/+/androidx-main:activity/activity/src/main/java/androidx/activity/EdgeToEdge.kt;l=40-44;drc=27e7d52e8604a080133e8b842db10c89b4482598
  */
 private val darkScrim = android.graphics.Color.argb(0x80, 0x1b, 0x1b, 0x1b)
-
-// @Preview
-// @Composable
-// fun ScaffoldWithCoroutinesSnackbar() {
-//    // decouple snackbar host state from scaffold state for demo purposes
-//    // this state, channel and flow is for demo purposes to demonstrate business logic layer
-//    val snackbarHostState = remember { SnackbarHostState() }
-//    // we allow only one snackbar to be in the queue here, hence conflated
-//    val channel = remember { Channel<Int>(Channel.CONFLATED) }
-//    LaunchedEffect(channel) {
-//        channel.receiveAsFlow().collect { index ->
-//            val result =
-//                snackbarHostState.showSnackbar(
-//                    message = "Snackbar # $index",
-//                    actionLabel = "Action on $index"
-//                )
-//            when (result) {
-//                SnackbarResult.ActionPerformed -> {
-//                    /* action has been performed */
-//                }
-//                SnackbarResult.Dismissed -> {
-//                    /* dismissed, no action needed */
-//                }
-//            }
-//        }
-//    }
-//    Scaffold(
-//        snackbarHost = { SnackbarHost(snackbarHostState) },
-//        floatingActionButton = {
-//            var clickCount by remember { mutableStateOf(0) }
-//            ExtendedFloatingActionButton(
-//                onClick = {
-//                    // offset snackbar data to the business logic
-//                    channel.trySend(++clickCount)
-//                }
-//            ) {
-//                Text("Show snackbar")
-//            }
-//        },
-//        content = { innerPadding ->
-//            Text(
-//                "Snackbar demo",
-//                modifier = Modifier.padding(innerPadding).fillMaxSize().wrapContentSize()
-//            )
-//        }
-//    )
-// }

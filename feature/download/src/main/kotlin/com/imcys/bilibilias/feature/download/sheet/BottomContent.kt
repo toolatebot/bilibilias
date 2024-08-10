@@ -14,14 +14,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dokar.sheets.BottomSheetValue
 import com.dokar.sheets.m3.BottomSheet
 import com.dokar.sheets.rememberBottomSheetState
-import com.hjq.toast.Toaster
 import com.imcys.bilibilias.core.designsystem.component.AsButton
 import com.imcys.bilibilias.core.model.video.ViewInfo
 
 @Composable
 internal fun BottomSheetContent(
     component: DialogComponent,
-    navigationToPlayer: (viewInfo: ViewInfo) -> Unit
+    navigationToPlayer: (viewInfo: ViewInfo) -> Unit,
 ) {
     val model by component.models.collectAsStateWithLifecycle()
     val state = rememberBottomSheetState(
@@ -36,7 +35,7 @@ internal fun BottomSheetContent(
     BottomSheet(state = state) {
         Column(
             modifier = Modifier,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AsButton(
                 onClick = {
@@ -45,16 +44,16 @@ internal fun BottomSheetContent(
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
-                    .height(60.dp)
+                    .height(60.dp),
             ) {
                 Text(text = "删除")
             }
             AsButton(
-                onClick = { Toaster.show("该功能未实现") },
+                onClick = { },
                 modifier = Modifier
                     .padding(8.dp)
                     .fillMaxWidth()
-                    .height(60.dp)
+                    .height(60.dp),
             ) {
                 Text(text = "播放")
             }

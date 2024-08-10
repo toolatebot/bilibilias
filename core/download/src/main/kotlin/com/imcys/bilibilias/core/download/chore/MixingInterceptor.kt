@@ -27,6 +27,7 @@ import javax.inject.Inject
 
 private const val RELATIVE_PATH = "Movies/biliAs/"
 
+@Suppress("ktlint:standard:function-naming")
 class MixingInterceptor @Inject constructor(
     @ApplicationContext private val context: Context,
     @ApplicationScope private val scope: CoroutineScope,
@@ -41,7 +42,7 @@ class MixingInterceptor @Inject constructor(
         if (!enable) return
         scope.launch {
             errorMonitor.addShortErrorMessage("开始合并视频: ${message.video.subTitle}")
-            val path = userPreferences.userData.first().storagePath
+            val path = userPreferences.userData.first().storageFolder
             Napier.d { "指定路径 $path" }
             if (path != null) {
                 指定写入路径(message, path)
@@ -51,6 +52,7 @@ class MixingInterceptor @Inject constructor(
         }
     }
 
+    @Suppress("standard:function-naming")
     private suspend fun 指定写入路径(message: GroupTask, path: String) {
         val savePath = DocumentFileCompat.fromTreeUri(context, path.toUri())!!
         val outputFile = savePath.findFile("${message.video.subTitle}.mp4")
@@ -112,9 +114,11 @@ class MixingInterceptor @Inject constructor(
 
     private fun getExistingVideoUriOrNull(message: GroupTask): Uri? {
         ContentResolverUtils.query(
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-            else MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            } else {
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            },
             arrayOf(
                 MediaStore.Video.Media._ID,
                 MediaStore.Video.Media.DISPLAY_NAME,

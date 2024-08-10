@@ -1,7 +1,6 @@
 package com.imcys.bilibilias.feature.splash
 
 import com.arkivanov.decompose.ComponentContext
-import com.imcys.bilibilias.core.datastore.AsCookieStoreDataSource
 import com.imcys.bilibilias.core.datastore.UsersDataSource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -13,7 +12,7 @@ class SplashComponent @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     private val usersDataSource: UsersDataSource,
 ) : ComponentContext by componentContext {
-    val isLogin: Boolean = runBlocking { usersDataSource.users.first().isLogined }
+    val isLogin: Boolean = runBlocking { usersDataSource.users.first().isLogin }
 
     @AssistedFactory
     interface Factory {

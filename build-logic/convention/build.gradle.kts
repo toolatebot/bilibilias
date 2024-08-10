@@ -17,12 +17,7 @@ dependencies {
     compileOnly(libs.compose.gradlePlugin)
     compileOnly(libs.detekt.gradlePlugin)
     compileOnly(libs.kotlin.power.assert.gradlePlugin)
-    compileOnly(libs.compose.compiler.report.gradlePlugin) {
-        repositories {
-            mavenCentral()
-            gradlePluginPortal()
-        }
-    }
+    implementation(libs.truth)
 }
 
 tasks {
@@ -101,6 +96,10 @@ gradlePlugin {
         register("composeCompilerReport") {
             id = "bilibilias.compose.compiler.report"
             implementationClass = "ComposeCompilerReportPlugin"
+        }
+        register("androidOptionsUnitTests") {
+            id = "bilibilias.android.testoptions"
+            implementationClass = "AndroidTestOptionsUnitTestsConventionPlugin"
         }
     }
 }

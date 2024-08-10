@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.core.app.ShareCompat
 import androidx.core.content.FileProvider
 import com.arkivanov.decompose.ComponentContext
-import com.hjq.toast.Toaster
 import com.imcys.bilibilias.core.common.download.DefaultConfig.DEFAULT_COMMAND
 import com.imcys.bilibilias.core.common.download.DefaultConfig.DEFAULT_NAMING_RULE
 import com.imcys.bilibilias.core.common.download.DefaultConfig.DEFAULT_STORE_PATH
@@ -34,43 +33,32 @@ class DefaultSettingsComponent @AssistedInject constructor(
     private val asPreferencesDataSource: AsPreferencesDataSource,
     private val asCookieStoreDataSource: AsCookieStoreDataSource,
     private val usersDataSource: UsersDataSource,
-) : SettingsComponent, BaseViewModel<UserEditEvent, UserEditableSettings>(componentContext) {
+) : BaseViewModel<UserEditEvent, UserEditableSettings>(componentContext),
+    SettingsComponent {
 
     @Composable
     override fun models(events: Flow<UserEditEvent>): UserEditableSettings {
         val userData by asPreferencesDataSource.userData.collectAsState(
             initial = UserData(
-                storagePath = DEFAULT_STORE_PATH,
-                namingRule = DEFAULT_NAMING_RULE,
-                autoMerge = true,
-                autoImport = false,
-                shouldAppcenter = true,
-                command = DEFAULT_COMMAND
+                storageFolder = DEFAULT_STORE_PATH,
+                fileNamesConvention = DEFAULT_NAMING_RULE,
+                ffmpegCommand = DEFAULT_COMMAND,
             ),
-            context = viewModelScope.coroutineContext
+            context = viewModelScope.coroutineContext,
         )
         LaunchedEffect(Unit) {
             events.collect { event ->
                 when (event) {
-                    is UserEditEvent.onChangeAutoImport ->
-                        asPreferencesDataSource.setAutoImportToBilibili(event.state)
+                    is UserEditEvent.EditCommand ->
+                        asPreferencesDataSource.setFfmpegCommand(event.text)
 
-                    is UserEditEvent.onChangeAutoMerge ->
-                        asPreferencesDataSource.setAutoMerge(event.state)
+                    is UserEditEvent.EditNamingRule ->
+                        asPreferencesDataSource.setFileNamesConvention(event.rule)
 
-                    is UserEditEvent.onEditCommand ->
-                        asPreferencesDataSource.setCommand(event.text)
+                    is UserEditEvent.SelectedStoragePath ->
+                        asPreferencesDataSource.setStorageFolder(event.path)
 
-                    is UserEditEvent.onEditNamingRule ->
-                        asPreferencesDataSource.setFileNameRule(event.rule)
-
-                    is UserEditEvent.onSelectedStoragePath ->
-                        asPreferencesDataSource.setFileStoragePath(event.path)
-
-                    is UserEditEvent.onChangeWill ->
-                        asPreferencesDataSource.setShouldAppcenter(event.state)
-
-                    UserEditEvent.onLogout -> usersDataSource.setLoginState(false)
+                    UserEditEvent.Logout -> usersDataSource.setLoginState(false)
 
                     UserEditEvent.ShareLog.NewLog -> {
                         val logFile = File(DevUtils.getContext().externalCacheDir, "log.txt")
@@ -81,16 +69,15 @@ class DefaultSettingsComponent @AssistedInject constructor(
                         val oldLogFile = File(DevUtils.getContext().externalCacheDir, "old_log.txt")
                         shareLog(oldLogFile)
                     }
+
+                    else -> Unit
                 }
             }
         }
         return UserEditableSettings(
-            storagePath = userData.storagePath ?: DEFAULT_STORE_PATH,
-            namingRule = userData.namingRule ?: DEFAULT_NAMING_RULE,
-            autoMerge = true,
-            autoImport = false,
-            command = userData.command ?: DEFAULT_COMMAND,
-            shouldAppcenter = true
+            storagePath = userData.storageFolder ?: DEFAULT_STORE_PATH,
+            namingRule = userData.fileNamesConvention ?: DEFAULT_NAMING_RULE,
+            command = userData.ffmpegCommand ?: DEFAULT_COMMAND,
         )
     }
 
@@ -108,7 +95,7 @@ private fun shareLog(logFile: File) {
         val uri = FileProvider.getUriForFile(
             context,
             "${AppUtils.getPackageName()}.fileProvider",
-            logFile
+            logFile,
         )
         val title = "bilibilias"
         val shareIntent = ShareCompat.IntentBuilder(context)
@@ -125,7 +112,6 @@ private fun shareLog(logFile: File) {
         chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         AppUtils.startActivity(chooserIntent)
     } else {
-        Toaster.show("日志文件不存在")
         Napier.d { "日志文件不存在" }
     }
 }
