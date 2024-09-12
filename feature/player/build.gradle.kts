@@ -16,10 +16,11 @@ dependencies {
 
     implementation(libs.androidx.media3.datasource.okhttp)
 
-    implementation(libs.gsyvideoplayer.java)
-    implementation(libs.gsyvideoplayer.exo2)
-
-    implementation(libs.akdanmaku)
+    implementation(libs.androidx.media3.common)
+    // implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.androidx.media3.session)
 
     testImplementation(projects.core.testing)
     androidTestImplementation(libs.bundles.androidx.compose.ui.test)

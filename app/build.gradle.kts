@@ -16,8 +16,8 @@ android {
     namespace = "com.imcys.bilibilias"
     defaultConfig {
         applicationId = "com.imcys.bilibilias"
-        versionCode = 18
-        versionName = "0.1.8"
+        versionCode = 22
+        versionName = "0.1.22"
         ndk {
             abiFilters += listOf("arm64-v8a")
         }
@@ -26,8 +26,15 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        applicationVariants.all {
+            outputs.forEach { output ->
+                if (output is com.android.build.gradle.internal.api.BaseVariantOutputImpl) {
+                    output.outputFileName =
+                        "bilibilias-v$versionName-$name.${output.outputFile.extension}"
+                }
+            }
+        }
     }
-
     buildTypes {
         debug {
             applicationIdSuffix = AsBuildType.DEBUG.applicationIdSuffix
@@ -43,16 +50,18 @@ android {
             )
             applicationIdSuffix = AsBuildType.RELEASE.applicationIdSuffix
             baselineProfile.automaticGenerationDuringBuild = true
+            signingConfig = signingConfigs["BilibiliAsSigningConfig"]
             resValue("string", "app_name", "BILIBILIAS")
             resValue("string", "app_channel", "Official Channel")
         }
     }
-
     packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            merges += "META-INF/LICENSE.md"
-            merges += "META-INF/LICENSE-notice.md"
+        jniLibs {
+            pickFirsts += "**/libavcodec.so"
+            pickFirsts += "**/libavutil.so"
+            pickFirsts += "**/libswresample.so"
+            pickFirsts += "**/libswscale.so"
+            pickFirsts += "**/libavformat.so"
         }
     }
 }
@@ -68,6 +77,7 @@ dependencies {
     implementation(projects.feature.settings)
     implementation(projects.feature.player)
     implementation(projects.feature.authorspace)
+    implementation(projects.feature.ffmpegAction)
 
     implementation(projects.core.analytics)
     implementation(projects.core.common)
@@ -79,6 +89,7 @@ dependencies {
     implementation(projects.core.data)
 
     implementation(projects.sync.work)
+    implementation(projects.okdownload.okdownload)
 
     implementation(libs.androidx.activity.compose) {
         exclude(group = "androidx.lifecycle", module = "lifecycle-viewmodel-ktx")

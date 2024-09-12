@@ -29,7 +29,7 @@ class Logging @Inject constructor(@ApplicationContext private val context: Conte
                 ),
             )
         } catch (e: Exception) {
-            Napier.d(e) { "初始化日志" }
+            Napier.d { e.stackTraceToString() }
         }
     }
 }

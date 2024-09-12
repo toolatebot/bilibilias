@@ -1,17 +1,15 @@
 package com.imcys.bilibilias.core.download
 
 import androidx.collection.mutableObjectListOf
-import com.imcys.bilibilias.core.common.network.di.ApplicationScope
 import com.imcys.bilibilias.core.data.util.ErrorMonitor
-import com.imcys.bilibilias.core.data.util.MessageType
 import com.imcys.bilibilias.core.database.dao.DownloadTaskDao
 import com.imcys.bilibilias.core.database.model.DownloadTaskEntity
 import com.imcys.bilibilias.core.download.chore.DefaultGroupTaskCall
 import com.imcys.bilibilias.core.download.task.AsDownloadTask
-import com.imcys.bilibilias.core.download.task.GroupTask
-import com.imcys.bilibilias.core.model.download.FileType
 import com.imcys.bilibilias.core.model.download.State
+import com.imcys.bilibilias.core.network.di.ApplicationScope
 import com.liulishuo.okdownload.DownloadTask
+import com.liulishuo.okdownload.OkDownload
 import com.liulishuo.okdownload.core.cause.EndCause
 import com.liulishuo.okdownload.core.cause.ResumeFailedCause
 import com.liulishuo.okdownload.core.listener.DownloadListener1
@@ -29,6 +27,7 @@ class AsDownloadListener @Inject constructor(
     private val defaultGroupTaskCall: DefaultGroupTaskCall,
     private val errorMonitor: ErrorMonitor,
     private val taskDao: DownloadTaskDao,
+    @Suppress("unused") private val okDownload: OkDownload,
 ) : DownloadListener1() {
     private val taskQueue = mutableObjectListOf<AsDownloadTask>()
 
@@ -41,18 +40,18 @@ class AsDownloadListener @Inject constructor(
         scope.launch {
             Napier.d(tag = TAG) { "任务开始 ${task.filename}" }
             val asTask = taskQueue.first { it.okTask === task }
-            val info = asTask.ids
+            val ids = asTask.ids
             val taskEntity = DownloadTaskEntity(
                 uri = asTask.okTask.uri,
-                aid = info.aid,
-                bvid = info.bvid,
-                cid = info.cid,
+                aid = ids.aid,
+                bvid = ids.bvid,
+                cid = ids.cid,
                 fileType = asTask.fileType,
                 subTitle = asTask.subTitle,
                 title = asTask.title,
                 state = State.RUNNING,
             )
-            taskDao.insertOrUpdate(taskEntity)
+            taskDao.insertTask(taskEntity)
             errorMonitor.addShortErrorMessage("添加任务到下载队列")
         }
     }
@@ -66,40 +65,28 @@ class AsDownloadListener @Inject constructor(
         scope.launch {
             Napier.d(tag = TAG, throwable = realCause) { "任务结束 $cause-${task.filename}" }
             val asTask = taskQueue.first { it.okTask === task }
+            val state = if (realCause == null) State.COMPLETED else State.ERROR
+            asTask.state = state
             val info = asTask.ids
-            taskDao.updateStateByUri(
-                if (realCause == null) State.COMPLETED else State.ERROR,
-                task.uri,
-            )
+            taskDao.updateStateByUri(state, task.uri)
 
             val tasks = taskDao.findById(info.aid, info.bvid, info.cid)
-            val v = tasks.find { it.fileType == FileType.VIDEO }
-            val a = tasks.find { it.fileType == FileType.AUDIO }
-            if (v != null && v.state == State.COMPLETED) {
-                if (a != null && a.state == State.COMPLETED) {
-                    defaultGroupTaskCall.execute(GroupTask(v, a))
+            val list = mutableListOf<AsDownloadTask>()
+            taskQueue.fold(list) { acc, element ->
+                if (element.ids.cid == info.cid && element.ids.bvid == info.bvid && element.ids.aid == info.aid) {
+                    acc.add(element)
                 }
+                list
             }
-            errorMonitor.addShortErrorMessage("添加任务到下载队列")
+            if (list.size == 2 && list.all { it.state == State.COMPLETED }) {
+                defaultGroupTaskCall.execute(tasks)
+            }
         }
-    }
-
-    private fun toast(
-        realCause: Exception?,
-        task: AsDownloadTask,
-    ) {
-        val filename = task.okTask.filename
-        val messageWithType = if (realCause == null) {
-            "$filename·下载成功" to MessageType.Normal
-        } else {
-            "$filename·下载失败" to MessageType.Error
-        }
-        errorMonitor.addShortErrorMessage(messageWithType.first, messageWithType.second)
     }
 
     override fun progress(task: DownloadTask, currentOffset: Long, totalLength: Long) {
         scope.launch {
-            Napier.d(tag = TAG) { "下载中: ${task.filename} $currentOffset-$totalLength" }
+            Napier.d(tag = TAG) { "下载进度:$currentOffset--$totalLength ${task.filename} " }
             taskDao.updateProgressByUri(
                 currentOffset,
                 totalLength,

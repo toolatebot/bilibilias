@@ -1,8 +1,6 @@
 package com.imcys.bilibilias.ui
 
-import androidx.annotation.StringRes
 import androidx.compose.ui.test.assertIsSelected
-import androidx.compose.ui.test.junit4.AndroidComposeTestRule
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.espresso.NoActivityResumedException
@@ -14,7 +12,6 @@ import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
-import kotlin.properties.ReadOnlyProperty
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 
@@ -49,14 +46,10 @@ class NavigationTest {
     @get:Rule(order = 3)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
-    private fun AndroidComposeTestRule<*, *>.stringResource(@StringRes resId: Int) =
-        ReadOnlyProperty<Any, String> { _, _ -> activity.getString(resId) }
-
     // The strings used for matching in these tests
     private val home by composeTestRule.stringResource(R.string.app_home_menu_button_navigation_home)
     private val tool by composeTestRule.stringResource(R.string.app_home_menu_button_navigation_tool)
     private val download by composeTestRule.stringResource(R.string.app_home_menu_button_navigation_download)
-    private val user by composeTestRule.stringResource(R.string.app_home_menu_button_navigation_user)
 
     private val appName by composeTestRule.stringResource(R.string.app_name)
 
@@ -66,7 +59,7 @@ class NavigationTest {
     }
 
     @Test
-    fun firstScreen_isForYou() {
+    fun firstScreen_isHome() {
         composeTestRule.apply {
             onNodeWithText(home).assertIsSelected()
         }

@@ -193,7 +193,7 @@ jobs:
         id: cache-jemalloc
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build projects and run instrumentation tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -225,7 +225,7 @@ jobs:
       - name: Display local test coverage (only API 30)
         if: matrix.api-level == 30
         id: jacoco
-        uses: madrapps/jacoco-report@v1.6.1
+        uses: madrapps/jacoco-report@v1.7.0
         with:
           title: Combined test coverage report
           min-coverage-overall: 40

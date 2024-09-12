@@ -6,6 +6,8 @@ import com.imcys.bilibilias.configureBadgingTasks
 import com.imcys.bilibilias.configureGradleManagedDevices
 import com.imcys.bilibilias.configureKotlinAndroid
 import com.imcys.bilibilias.configurePrintApksTask
+import com.imcys.bilibilias.configureResourcesPackaging
+import com.imcys.bilibilias.configureSigning
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
@@ -27,6 +29,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 @Suppress("UnstableApiUsage")
                 testOptions.animationsDisabled = true
                 configureGradleManagedDevices(this)
+                configureResourcesPackaging(this)
+                configureSigning(this)
             }
             extensions.configure<ApplicationAndroidComponentsExtension> {
                 configurePrintApksTask(this)

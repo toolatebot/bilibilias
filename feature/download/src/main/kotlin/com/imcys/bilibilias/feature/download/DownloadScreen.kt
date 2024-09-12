@@ -2,7 +2,6 @@ package com.imcys.bilibilias.feature.download
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowRight
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,12 +21,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,31 +35,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.imcys.bilibilias.core.database.model.DownloadTaskEntity
-import com.imcys.bilibilias.core.database.model.Task
 import com.imcys.bilibilias.core.designsystem.component.AsTextButton
 import com.imcys.bilibilias.core.designsystem.icon.AsIcons
 import com.imcys.bilibilias.core.model.download.FileType
 import com.imcys.bilibilias.core.model.download.State
 import com.imcys.bilibilias.core.model.video.ViewInfo
+import com.imcys.bilibilias.core.ui.thumbnail.Thumbnail
 import com.imcys.bilibilias.core.utils.selected
 import com.imcys.bilibilias.feature.download.component.DownloadComponent
 import com.imcys.bilibilias.feature.download.component.Event
 import com.imcys.bilibilias.feature.download.component.Model
 import com.imcys.bilibilias.feature.download.component.PreviewDownloadComponent
-import kotlin.reflect.KFunction1
 
 @Composable
-fun DownloadContent(
-    component: DownloadComponent,
-    navigationToPlayer: (viewInfo: ViewInfo) -> Unit,
-) {
-    DownloadScreen(component = component, navigationToPlayer = navigationToPlayer)
+fun DownloadContent(component: DownloadComponent) {
+    DownloadScreen(component = component)
 }
 
 @Composable
 internal fun DownloadScreen(
     component: DownloadComponent,
-    navigationToPlayer: (viewInfo: ViewInfo) -> Unit,
 ) {
     val model by component.models.collectAsStateWithLifecycle()
 
@@ -94,7 +87,7 @@ internal fun DownloadScreen(
                     EditButton(
                         model.canDelete,
                         editable = { onEvent(Event.OpenDeleteOption) },
-                        cancleSelection = { onEvent(Event.CloseDeleteOption) },
+                        cancelSelection = { onEvent(Event.CloseDeleteOption) },
                     )
                 },
             )
@@ -106,11 +99,11 @@ internal fun DownloadScreen(
         ) {
             model.entities.forEach {
                 items(it, key = { it.id }) { item ->
-                    DownloadTaskItem(
+                    DownloadTaskPanel(
                         task = item,
                         onSettingsClicked = onSettingsClicked,
-                        isOpenSelecte = model.canDelete,
-                        onSelecte = { onEvent(Event.UserSelecte(it)) },
+                        isOpenSelect = model.canDelete,
+                        onSelect = { onEvent(Event.UserSelecte(it)) },
                         isSelected = selectedDeletes.selected(item.id),
                     )
                 }
@@ -124,11 +117,11 @@ internal fun DownloadScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DownloadTaskItem(
+fun DownloadTaskPanel(
     task: DownloadTaskEntity,
     onSettingsClicked: (ViewInfo, FileType) -> Unit,
-    isOpenSelecte: Boolean,
-    onSelecte: (Int) -> Unit,
+    isOpenSelect: Boolean,
+    onSelect: (Int) -> Unit,
     isSelected: Boolean,
 ) {
     Column {
@@ -140,22 +133,24 @@ fun DownloadTaskItem(
                 )
             },
             leadingContent = {
-                Card(
-                    modifier = Modifier.size(80.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color(251, 114, 153),
-                    ),
-                ) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center,
+                if (task.fileType == FileType.VIDEO) {
+                    Thumbnail(task.uri, 1000)
+                } else {
+                    Card(
+                        modifier = Modifier.size(80.dp),
+                        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.primary),
                     ) {
-                        Text(
-                            text = task.fileType.toString(),
-                            modifier = Modifier,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
-                        )
+                        Box(
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = task.fileType.toString(),
+                                modifier = Modifier,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                            )
+                        }
                     }
                 }
             },
@@ -167,13 +162,11 @@ fun DownloadTaskItem(
                 )
             },
             supportingContent = {
-                Text(text = "${task.state.cn}·")
+                Text(text = task.state.cn)
             },
             trailingContent = {
-                if (isOpenSelecte) {
-                    Checkbox(checked = isSelected, onCheckedChange = { onSelecte(task.id) })
-                } else {
-                    Icon(Icons.AutoMirrored.Filled.ArrowRight, contentDescription = null)
+                if (isOpenSelect) {
+                    Checkbox(checked = isSelected, onCheckedChange = { onSelect(task.id) })
                 }
             },
         )
@@ -183,72 +176,23 @@ fun DownloadTaskItem(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun DownloadTaskItem(
-    task: Task,
-    onSettingsClicked: (ViewInfo, FileType) -> Unit,
-    onSelected: KFunction1<Int, Unit>,
-) {
-    ListItem(
-        modifier = Modifier.combinedClickable {
-            onSettingsClicked(ViewInfo(task.aid, task.bvid, task.cid, task.title), task.fileType)
-        },
-        leadingContent = {
-            Card(
-                modifier = Modifier.size(80.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(251, 114, 153),
-                ),
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = task.fileType.toString(),
-                        modifier = Modifier,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                    )
-                }
-            }
-        },
-        headlineContent = {
-            Text(
-                text = task.subTitle,
-                modifier = Modifier,
-                maxLines = 2,
-            )
-        },
-        supportingContent = {
-            Text(text = task.state.cn)
-//            Text("${task.state}·${task.uri.toFile().length().bytes.toLong(DataUnit.MEGABYTES)}MB")
-        },
-        trailingContent = {
-            Icon(Icons.AutoMirrored.Filled.ArrowRight, contentDescription = null)
-        },
-    )
-}
-
 @Composable
 fun EditButton(
     isEdit: Boolean,
     editable: () -> Unit,
-    cancleSelection: () -> Unit,
+    cancelSelection: () -> Unit,
 ) {
     if (!isEdit) {
         IconButton(onClick = editable) {
             Icon(imageVector = AsIcons.EditNote, contentDescription = "编辑")
         }
     } else {
-        AsTextButton(onClick = cancleSelection, text = { Text(text = "取消") })
+        AsTextButton(onClick = cancelSelection, text = { Text(text = "取消") })
     }
 }
 
 @Preview(showSystemUi = true, showBackground = false)
 @Composable
 private fun PreviewDownloadScreen() {
-    DownloadContent(component = PreviewDownloadComponent()) {
-    }
+    DownloadContent(component = PreviewDownloadComponent())
 }

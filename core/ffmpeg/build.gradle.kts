@@ -9,10 +9,17 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    defaultConfig {
+        testInstrumentationRunner = "com.imcys.bilibilias.core.testing.AsTestRunner"
+    }
 }
 
 dependencies {
     implementation(projects.core.common)
 
     implementation(libs.ffmpeg.kit.full)
+    implementation(libs.urlencoder)
+
+    androidTestImplementation(libs.hilt.android.testing)
+    androidTestImplementation(projects.core.testing)
 }

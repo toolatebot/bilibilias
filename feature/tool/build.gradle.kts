@@ -1,4 +1,6 @@
-﻿plugins {
+import org.gradle.kotlin.dsl.test
+
+plugins {
     alias(libs.plugins.bilibilias.android.feature)
     alias(libs.plugins.bilibilias.android.compose)
     alias(libs.plugins.bilibilias.android.jacoco)
@@ -14,6 +16,8 @@ dependencies {
 
     implementation(projects.core.domain)
     implementation(projects.core.download)
+
+    implementation(libs.flexible.bottomsheet.material3)
 
     testImplementation(projects.core.testing)
     androidTestImplementation(libs.bundles.androidx.compose.ui.test)
